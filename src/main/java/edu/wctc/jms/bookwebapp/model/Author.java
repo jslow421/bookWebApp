@@ -6,6 +6,7 @@
 package edu.wctc.jms.bookwebapp.model;
 
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.Objects;
 
 /**
@@ -108,6 +109,10 @@ public class Author {
         author.setDateAdded(date);
         
         return author;
+    }
+
+    void setDateAdded(Date date) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

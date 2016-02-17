@@ -15,7 +15,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import edu.wctc.jms.bookwebapp.model.Author;
-import edu.wctc.jms.bookwebapp.model.AuthorService;
+import edu.wctc.jms.bookwebapp.model.AuthorServices;
+import edu.wctc.jms.bookwebapp.model.MockAuthorDao;
+import java.util.List;
 
 /**
  *
@@ -39,12 +41,14 @@ public class AuthorController extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         
-        try (PrintWriter out = response.getWriter()) {
-        AuthorService author = new AuthorService();
-        ArrayList<Author> authorList = author.createAuthorArray();
-        request.setAttribute("authorList", authorList);
+        try  {
+        AuthorServices srv = new AuthorServices();
+        List<Author> authors = srv.getAuthorList();
+        request.setAttribute("authorList", authors);
         RequestDispatcher view = request.getRequestDispatcher(RESPONSE_URL);
         view.forward(request, response);
+        }catch (Exception e){
+            
         }
     }
 
