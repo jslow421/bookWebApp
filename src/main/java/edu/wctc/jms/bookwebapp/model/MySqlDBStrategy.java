@@ -13,6 +13,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -109,66 +110,66 @@ public class MySqlDBStrategy implements DBStrategy {
     @Override
     public int deleteRecordByID(String tableName, String columnName, Object value)
             throws SQLException {
-        
+
         String sql = "Delete from " + tableName + " where " + columnName + "= ?";
         PreparedStatement psmt = conn.prepareStatement(sql);// this line sends to server. compiled
         psmt.setObject(1, value);
+
+        return psmt.executeUpdate();
+
+        /* My attempt - not using prepared statement, but essentially same - no Object
         
-        return psmt.executeUpdate(); 
-        
-        
-/* My attempt - not using prepared statement, but essentially same - no Object
         String sql = "Delete from " + tableName + " where " + columnName + "= " + value;
         Statement stmt = conn.createStatement();
 
         int recordsRemoved = stmt.executeUpdate(sql);
 
         return recordsRemoved;
-        */
+         */
     }
-    
+
     public int updateRecordByID(String tableName, List<String> colNames, List<Object> colValues,
-                                String pkColName, Object value) throws SQLException{
-        
+            String pkColName, Object value) throws SQLException {
+
         PreparedStatement pstmt = null;
         int recsUpdated = 0;
 
         // do this in an excpetion handler so that we can depend on the
         // finally clause to close the connection
         try {
-                    pstmt = buildUpdateStatement(conn,tableName,colNames,pkColName);
+            pstmt = buildUpdateStatement(conn, tableName, colNames, pkColName);
 
-                    final Iterator i=colValues.iterator();
-                    int index = 1;
-                    Object obj = null;
+            final Iterator i = colValues.iterator();
+            int index = 1; 
+            Object obj = null;
 
-                    // set params for column values
-                    while( i.hasNext()) {
-                        obj = i.next();
-                        pstmt.setObject(index++, obj);
-                    }
-                    // and finally set param for wehere value
-                    pstmt.setObject(index,value);
-                   
-                    recsUpdated = pstmt.executeUpdate();
+            // set params for column values
+            while (i.hasNext()) {
+                obj = i.next();
+                pstmt.setObject(index++, obj);
+            }
+            // and finally set param for wehere value
+            pstmt.setObject(index, value);
+
+            recsUpdated = pstmt.executeUpdate();
 
         } catch (SQLException sqle) {
             throw sqle;
         } catch (Exception e) {
-            throw e;
+            throw new SQLException(e.getMessage());
         } finally {
-                    try {
-                            pstmt.close();
-                            conn.close();
-                    } catch(SQLException e) {
-                            throw e;
-                    } // end try
+            try {
+                pstmt.close();
+                conn.close();
+            } catch (SQLException e) {
+                throw e;
+            } // end try
         } // end finally
 
         return recsUpdated;
-        
+
     }
-    
+
     /*
 	 * Builds a java.sql.PreparedStatement for an sql update using only one where clause test
 	 * @param conn - a JDBC <code>Connection</code> object
@@ -179,22 +180,21 @@ public class MySqlDBStrategy implements DBStrategy {
 	 * search criteria.
 	 * @return java.sql.PreparedStatement
 	 * @throws SQLException
-	 */
-	private PreparedStatement buildUpdateStatement(Connection conn_loc, String tableName,
-												   List colDescriptors, String whereField)
-	throws SQLException {
-		StringBuffer sql = new StringBuffer("UPDATE ");
-		(sql.append(tableName)).append(" SET ");
-		final Iterator i=colDescriptors.iterator();
-		while( i.hasNext() ) {
-			(sql.append( (String)i.next() )).append(" = ?, ");
-		}
-		sql = new StringBuffer( (sql.toString()).substring( 0,(sql.toString()).lastIndexOf(", ") ) );
-		((sql.append(" WHERE ")).append(whereField)).append(" = ?");
-		final String finalSQL=sql.toString();
-		return conn_loc.prepareStatement(finalSQL);
-	}
-    
+     */
+    private PreparedStatement buildUpdateStatement(Connection conn_loc, String tableName,
+            List colDescriptors, String whereField)
+            throws SQLException {
+        StringBuffer sql = new StringBuffer("UPDATE ");
+        (sql.append(tableName)).append(" SET ");
+        final Iterator i = colDescriptors.iterator();
+        while (i.hasNext()) {
+            (sql.append((String) i.next())).append(" = ?, ");
+        }
+        sql = new StringBuffer((sql.toString()).substring(0, (sql.toString()).lastIndexOf(", ")));//remove last comma
+        ((sql.append(" WHERE ")).append(whereField)).append(" = ?");
+        final String finalSQL = sql.toString();
+        return conn_loc.prepareStatement(finalSQL);
+    }
 
     /**
      * Testing
@@ -212,11 +212,17 @@ public class MySqlDBStrategy implements DBStrategy {
         List<Map<String, Object>> rawData = db.findAllRecords("author", 0);
 
         //int updates = db.deleteRecordByID("author", "author_id", 2);
-
+        
+        List<String> colNames = Arrays.asList("author_name");
+        List<Object> colValues = Arrays.asList("Lucifer");
+        
+        //int result = db.updateRecordByID("author", colNames, colValues, "author_id", 2);
+        
         db.closeConnection();
 
         System.out.println(rawData);
         //System.out.println("Records removed: " + updates);
+        //System.out.println(result);
 
     }
 }

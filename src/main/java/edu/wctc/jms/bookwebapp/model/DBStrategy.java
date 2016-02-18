@@ -24,4 +24,6 @@ public interface DBStrategy {
     public abstract List<Map<String,Object>> findAllRecords(String tableName, int maxRecords) throws SQLException;
     
     public abstract int deleteRecordByID(String tableName, String columnName, Object recordID) throws SQLException;
+    public int updateRecordByID(String tableName, List<String> colNames, List<Object> colValues,
+            String pkColName, Object value) throws SQLException;
 }
