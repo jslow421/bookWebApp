@@ -7,6 +7,7 @@ package edu.wctc.jms.bookwebapp.model;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -100,21 +101,33 @@ public class MySqlDBStrategy implements DBStrategy {
      *
      * @param tableName
      * @param columnName
-     * @param recordID
+     * @param value
      * @return
      * @throws SQLException
      */
     @Override
-    public int removeRecordByID(String tableName, String columnName, int recordID)
+    public int deleteRecordByID(String tableName, String columnName, Object value)
             throws SQLException {
-
-        String sql = "Delete from " + tableName + " where " + columnName + "= " + recordID;
+        
+        String sql = "Delete from " + tableName + " where " + columnName + "= ?";
+        PreparedStatement psmt = conn.prepareStatement(sql);// this line sends to server. compiled
+        psmt.setObject(1, value);
+        
+        return psmt.executeUpdate(); 
+        
+        
+/* My attempt - not using prepared statement, but essentially same - no Object
+        String sql = "Delete from " + tableName + " where " + columnName + "= " + value;
         Statement stmt = conn.createStatement();
 
         int recordsRemoved = stmt.executeUpdate(sql);
 
         return recordsRemoved;
+        */
     }
+    
+    
+    
 
     /**
      * Testing
@@ -131,7 +144,7 @@ public class MySqlDBStrategy implements DBStrategy {
 
         List<Map<String, Object>> rawData = db.findAllRecords("author", 0);
 
-        //int updates = db.removeRecordByID("author", "author_id", 2);
+        //int updates = db.deleteRecordByID("author", "author_id", 2);
 
         db.closeConnection();
 
