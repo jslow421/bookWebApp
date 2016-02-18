@@ -23,10 +23,17 @@ public class AuthorServices {
         
          return dao.getAuthorList();
     }
+    public int deleveAuthorByID(Object id) throws ClassNotFoundException, SQLException{
+        return dao.deleteAuthorByID(id);
+    }
+    
     
     public static void main(String[] args) throws ClassNotFoundException, SQLException {
         AuthorServices srv = new AuthorServices();
         List<Author> authors = srv.getAuthorList();
+        
+        
+        
         System.out.println(authors);
     }
     

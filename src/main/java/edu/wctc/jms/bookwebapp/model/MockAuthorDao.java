@@ -42,6 +42,12 @@ public abstract class MockAuthorDao implements AuthorDaoStrategy{
         
 }
     
+    @Override
+    public int deleteAuthorByID(Object id){
+        
+        return 1;
+    }
+    
     
     /**
      * Testing method -- not for use in web app.

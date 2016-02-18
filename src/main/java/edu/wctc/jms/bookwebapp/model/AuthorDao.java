@@ -63,6 +63,27 @@ public class AuthorDao implements AuthorDaoStrategy {
         return authors;
     }
     
+    //if you want to display records modified you should return an int - even if you don't use it
+    /**
+     * Delete an author record by ID
+     * 
+     * @param id
+     * @return
+     * @throws ClassNotFoundException
+     * @throws SQLException 
+     */
+    @Override
+    public int deleteAuthorByID(Object id) throws ClassNotFoundException, SQLException{
+        db.openConnection(DRIVER, URL, USERNAME, PASSWORD);
+        
+        int result = db.deleteRecordByID("author", "author_id", id);
+        
+        db.closeConnection();
+        
+        return result;
+    }
+    
+    
     public static void main(String[] args) throws ClassNotFoundException, SQLException {
         AuthorDaoStrategy dao = new AuthorDao();
         List<Author> authors = dao.getAuthorList();
