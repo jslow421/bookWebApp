@@ -12,6 +12,7 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -20,7 +21,6 @@ import java.util.List;
 import java.util.Map;
 
 /**
- *
  * @author John Slowik <jslowik@my.wctc.edu>
  */
 public class MySqlDBStrategy implements DBStrategy {
@@ -57,15 +57,16 @@ public class MySqlDBStrategy implements DBStrategy {
     creating connections is expensive, minimize number, and length of time it is open.
      */
     //keep this generic!! Treat every record as a map so it isn't specific to any one thing
+
     /**
      * Make sure you open and close a connection when using this method!
-     *
+     * <p>
      * Future optimizations may include changing return type to an array to
      * preserve some server resources
      *
      * @param tableName
      * @param maxRecords - Limit records found to maxRecords value. If
-     * maxRecords is zero (0) then there is no limit
+     *                   maxRecords is zero (0) then there is no limit
      * @return
      * @throws java.sql.SQLException
      */
@@ -87,7 +88,7 @@ public class MySqlDBStrategy implements DBStrategy {
         while (rs.next()) {
             Map<String, Object> record = new HashMap<>();
             for (int colNo = 1; colNo <= columnCount; colNo++) { // for loop is just for columns
-                Object colData = rs.getObject(colNo); // iterates through and collects column 
+                Object colData = rs.getObject(colNo); // iterates through and collects column
                 //data based on column number. Saves information as an object
                 String colName = rsmd.getColumnName(colNo); //get column name
                 record.put(colName, colData); // add column name string, and object column info
@@ -101,10 +102,10 @@ public class MySqlDBStrategy implements DBStrategy {
     /**
      * Remove a database record by column id
      *
-     * @param tableName
-     * @param columnName
-     * @param value
-     * @return
+     * @param tableName  - name of table that contains information to be deleted
+     * @param columnName - column name to pick value from
+     * @param value      - value in column to select record for deletion
+     * @return - returns int value for number of records effected
      * @throws SQLException
      */
     @Override
@@ -118,7 +119,7 @@ public class MySqlDBStrategy implements DBStrategy {
         return psmt.executeUpdate();
 
         /* My attempt - not using prepared statement, but essentially same - no Object
-        
+
         String sql = "Delete from " + tableName + " where " + columnName + "= " + value;
         Statement stmt = conn.createStatement();
 
@@ -129,7 +130,7 @@ public class MySqlDBStrategy implements DBStrategy {
     }
 
     public int updateRecordByID(String tableName, List<String> colNames, List<Object> colValues,
-            String pkColName, Object value) throws SQLException {
+                                String pkColName, Object value) throws SQLException {
 
         PreparedStatement pstmt = null;
         int recsUpdated = 0;
@@ -140,7 +141,7 @@ public class MySqlDBStrategy implements DBStrategy {
             pstmt = buildUpdateStatement(conn, tableName, colNames, pkColName);
 
             final Iterator i = colValues.iterator();
-            int index = 1; 
+            int index = 1;
             Object obj = null;
 
             // set params for column values
@@ -171,7 +172,7 @@ public class MySqlDBStrategy implements DBStrategy {
     }
 
     /*
-	 * Builds a java.sql.PreparedStatement for an sql update using only one where clause test
+     * Builds a java.sql.PreparedStatement for an sql update using only one where clause test
 	 * @param conn - a JDBC <code>Connection</code> object
 	 * @param tableName - a <code>String</code> representing the table name
 	 * @param colDescriptors - a <code>List</code> containing the column descriptors for
@@ -182,7 +183,7 @@ public class MySqlDBStrategy implements DBStrategy {
 	 * @throws SQLException
      */
     private PreparedStatement buildUpdateStatement(Connection conn_loc, String tableName,
-            List colDescriptors, String whereField)
+                                                   List colDescriptors, String whereField)
             throws SQLException {
         StringBuffer sql = new StringBuffer("UPDATE ");
         (sql.append(tableName)).append(" SET ");
@@ -194,6 +195,18 @@ public class MySqlDBStrategy implements DBStrategy {
         ((sql.append(" WHERE ")).append(whereField)).append(" = ?");
         final String finalSQL = sql.toString();
         return conn_loc.prepareStatement(finalSQL);
+    }
+
+    @Override
+    public int insertRecord(String tableName, String authorName) throws SQLException {
+
+        String sql = "insert into " + tableName + " (author_name) Values('" + authorName + "')";
+        Statement stmt = conn.createStatement();
+
+
+
+        return stmt.executeUpdate(sql);
+
     }
 
     /**
@@ -209,18 +222,20 @@ public class MySqlDBStrategy implements DBStrategy {
         db.openConnection("com.mysql.jdbc.Driver", "jdbc:mysql://localhost:3306/book",
                 "root", "admin");
 
+        int insert = db.insertRecord("author", "John Poe");
+
         List<Map<String, Object>> rawData = db.findAllRecords("author", 0);
 
         //int updates = db.deleteRecordByID("author", "author_id", 2);
-        
-        List<String> colNames = Arrays.asList("author_name");
-        List<Object> colValues = Arrays.asList("Lucifer");
-        
+
+       // List<String> colNames = Arrays.asList("author_name");
+       // List<Object> colValues = Arrays.asList("Lucifer");
         //int result = db.updateRecordByID("author", colNames, colValues, "author_id", 2);
-        
+
         db.closeConnection();
 
         System.out.println(rawData);
+        System.out.println("Added " + insert + " record(s)");
         //System.out.println("Records removed: " + updates);
         //System.out.println(result);
 

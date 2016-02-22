@@ -6,6 +6,7 @@
 package edu.wctc.jms.bookwebapp.model;
 
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -15,6 +16,7 @@ import java.util.List;
 public interface AuthorDaoStrategy {
 
     List<Author> getAuthorList() throws ClassNotFoundException, SQLException;
-    public int deleteAuthorByID(Object id) throws ClassNotFoundException, SQLException;
+    int deleteAuthorByID(Object id) throws ClassNotFoundException, SQLException;
+
     
 }
