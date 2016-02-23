@@ -7,7 +7,6 @@ package edu.wctc.jms.bookwebapp.controller;
 
 import edu.wctc.jms.bookwebapp.model.Author;
 import edu.wctc.jms.bookwebapp.model.AuthorServices;
-
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -16,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
+import javax.inject.Inject;
 
 /**
  *
@@ -25,6 +25,10 @@ import java.util.List;
 public class AuthorController extends HttpServlet {
 
     private static final String RESPONSE_URL = "/viewauthors.jsp";
+    private static final String ACTION_PARAM = "action";
+    
+    @Inject
+    private AuthorServices srv;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -40,7 +44,7 @@ public class AuthorController extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
 
         try {
-            AuthorServices srv = new AuthorServices();
+            //AuthorServices srv = new AuthorServices(); redundant thanks to injection
             List<Author> authors = srv.getAuthorList();
             request.setAttribute("authorList", authors);
             RequestDispatcher view = request.getRequestDispatcher(RESPONSE_URL);

@@ -5,6 +5,7 @@
  */
 package edu.wctc.jms.bookwebapp.model;
 
+import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -19,14 +20,20 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import javax.enterprise.context.SessionScoped;
 
 /**
  * @author John Slowik <jslowik@my.wctc.edu>
  */
-public class MySqlDBStrategy implements DBStrategy {
+@SessionScoped
+public class MySqlDBStrategy implements DBStrategy, Serializable {
 
     private Connection conn;
 
+    /**
+     * Default constructor for injection purposes
+     * 
+     */
     public MySqlDBStrategy() {
     }
 
@@ -197,6 +204,16 @@ public class MySqlDBStrategy implements DBStrategy {
         return conn_loc.prepareStatement(finalSQL);
     }
 
+    /**
+     * Insert a record into the database
+     *
+     * Need to get date working - using LocalDate, not java date
+     *
+     * @param tableName - name of table to add record to
+     * @param authorName - name of author to be added
+     * @return - returns number of records added
+     * @throws SQLException
+     */
     @Override
     public int insertRecord(String tableName, String authorName) throws SQLException {
 

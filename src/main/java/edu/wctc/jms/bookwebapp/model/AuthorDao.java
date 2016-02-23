@@ -5,6 +5,7 @@
  */
 package edu.wctc.jms.bookwebapp.model;
 
+import java.io.Serializable;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -13,18 +14,33 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import javax.enterprise.context.SessionScoped;
+import javax.inject.Inject;
 
 /**
  *
  * @author John Slowik <jslowik@my.wctc.edu>
  */
-public class AuthorDao implements AuthorDaoStrategy {
+@SessionScoped
+public class AuthorDao implements AuthorDaoStrategy, Serializable{
     //need a method using customer terminology that performs the task we want
     //responsible for opening/closing connection
     //driver class name, url, username, and password have to come from object 
     //  outside strategy object
+    
+    @Inject
+    private DBStrategy db;
 
-    private DBStrategy db = new MySqlDBStrategy(); // this dependency will be fixed later
+    /**
+     * Default constructor - necessary because it is being injected
+     * 
+     */
+    public AuthorDao() {
+    }
+    
+
+    //private DBStrategy db = new MySqlDBStrategy(); // this dependency will be fixed later
+    
     private final String DRIVER = "com.mysql.jdbc.Driver";
     private final String URL = "jdbc:mysql://localhost:3306/book";
     private final String USERNAME = "root";
@@ -90,5 +106,17 @@ public class AuthorDao implements AuthorDaoStrategy {
         System.out.println(authors);
         
     }
+    
+    
+    //getters and setters for injected db property
+    public DBStrategy getDb() {
+        return db;
+    }
+
+    public void setDb(DBStrategy db) {
+        this.db = db;
+    }
+    
+    
 
 }

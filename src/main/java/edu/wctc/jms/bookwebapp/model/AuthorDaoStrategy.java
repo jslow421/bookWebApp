@@ -17,6 +17,8 @@ public interface AuthorDaoStrategy {
 
     List<Author> getAuthorList() throws ClassNotFoundException, SQLException;
     int deleteAuthorByID(Object id) throws ClassNotFoundException, SQLException;
+    public DBStrategy getDb();
+    public void setDb(DBStrategy db);
 
     
 }
