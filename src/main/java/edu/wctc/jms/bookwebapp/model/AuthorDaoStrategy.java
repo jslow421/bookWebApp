@@ -19,6 +19,15 @@ public interface AuthorDaoStrategy {
     int deleteAuthorByID(Object id) throws ClassNotFoundException, SQLException;
     public DBStrategy getDb();
     public void setDb(DBStrategy db);
+    public void initDao(String driver, String url, String userName, String password);
+    public String getDriver();
+    public void setDriver(String driver);
+    public String getUrl();
+    public void setUrl(String url);
+    public String getUserName();
+    public void setUserName(String userName);
+    public String getPassword();
+    public void setPassword(String password);
 
     
 }

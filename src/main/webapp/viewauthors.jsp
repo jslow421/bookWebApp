@@ -23,6 +23,7 @@
             <div class="page-header">
                 <h1>Authors <small>Listing all</small></h1>
             </div>
+            <p><a class="btn btn-primary" href="./addauthor.jsp" role="button"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp Add Author</a></p>
 
             <div  class="col col-lg-12">
                 <div id="answer">
@@ -46,6 +47,10 @@
                                     <td>
                                         <c:out value="${author.dateAdded}"/>
                                     </td>
+                                    <td class="crudButtons">
+                                        <a class="btn btn-info btn-sm" href="#" role="button"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>&nbsp Edit</a>
+                                        <a class="btn btn-danger btn-sm" href="?action=delete" role="button"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span>&nbsp Delete</a>
+                                    </td>
                                 </tr>
                             </c:forEach>
                         </tbody>
@@ -53,6 +58,7 @@
                     <p>Records found: ${fn:length(authorList)}</p>
                 </div>
             </div>
+                <p><a class="btn btn-primary" href="./addauthor.jsp" role="button"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp Add Author</a></p>
         </div>
         <script src ="https://code.jquery.com/jquery-2.2.0.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>

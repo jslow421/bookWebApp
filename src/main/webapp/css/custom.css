@@ -11,3 +11,7 @@
     background-image: url("../img/UdiLjqO.jpg");
     text-shadow: black 0.2em 0.2em 0.2em;
 }
+.crudButtons{
+    text-align:center;
+    align-content: stretch;
+}

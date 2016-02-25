@@ -14,42 +14,47 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import javax.enterprise.context.SessionScoped;
+import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
 /**
  *
  * @author John Slowik <jslowik@my.wctc.edu>
  */
-@SessionScoped
-public class AuthorDao implements AuthorDaoStrategy, Serializable{
+@Dependent
+public class AuthorDao implements AuthorDaoStrategy, Serializable {
     //need a method using customer terminology that performs the task we want
     //responsible for opening/closing connection
     //driver class name, url, username, and password have to come from object 
     //  outside strategy object
-    
+
     @Inject
     private DBStrategy db;
 
     /**
      * Default constructor - necessary because it is being injected
-     * 
+     *
      */
     public AuthorDao() {
     }
-    
 
-    //private DBStrategy db = new MySqlDBStrategy(); // this dependency will be fixed later
-    
-    private final String DRIVER = "com.mysql.jdbc.Driver";
-    private final String URL = "jdbc:mysql://localhost:3306/book";
-    private final String USERNAME = "root";
-    private final String PASSWORD = "admin";
-    private final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    @Override
+    public void initDao(String driver, String url, String userName, String password) {
+        setDriver(driver);
+        setUrl(url);
+        setUserName(userName);
+        setPassword(password);
+    }
+
+    private String driver;
+    private String url;
+    private String userName;
+    private String password;
+    //private DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     @Override
     public List<Author> getAuthorList() throws ClassNotFoundException, SQLException {
-        db.openConnection(DRIVER, URL, USERNAME, PASSWORD);
+        db.openConnection(driver, url, userName, password);
 
         List<Map<String, Object>> rawData = db.findAllRecords("author", 0);
 
@@ -65,12 +70,10 @@ public class AuthorDao implements AuthorDaoStrategy, Serializable{
             String name = rec.get("author_name") == null ? "" : rec.get("author_name").toString();
             //must test for null!!!
             author.setAuthorName(name);
-            
-            //Date date = rec.get("date_added") == null ? null : (Date)rec.get("Date_added");
 
+            //Date date = rec.get("date_added") == null ? null : (Date)rec.get("Date_added");
             //LocalDate date = rec.get("date_added"); == null ? null : rec.get("date_added");
             //author.setDateAdded(date);
-
             authors.add(author);
 
         }
@@ -78,45 +81,83 @@ public class AuthorDao implements AuthorDaoStrategy, Serializable{
         db.closeConnection();
         return authors;
     }
-    
+
     //if you want to display records modified you should return an int - even if you don't use it
     /**
      * Delete an author record by ID
-     * 
+     *
      * @param id
      * @return
      * @throws ClassNotFoundException
-     * @throws SQLException 
+     * @throws SQLException
      */
     @Override
-    public int deleteAuthorByID(Object id) throws ClassNotFoundException, SQLException{
-        db.openConnection(DRIVER, URL, USERNAME, PASSWORD);
-        
+    public int deleteAuthorByID(Object id) throws ClassNotFoundException, SQLException {
+        db.openConnection(driver, url, userName, password);
+
         int result = db.deleteRecordByID("author", "author_id", id);
-        
+
         db.closeConnection();
-        
+
         return result;
     }
-    
-    
-    public static void main(String[] args) throws ClassNotFoundException, SQLException {
-        AuthorDaoStrategy dao = new AuthorDao();
-        List<Author> authors = dao.getAuthorList();
-        System.out.println(authors);
-        
-    }
-    
-    
+
     //getters and setters for injected db property
+    @Override
     public DBStrategy getDb() {
         return db;
     }
 
+    @Override
     public void setDb(DBStrategy db) {
         this.db = db;
     }
-    
-    
+
+    @Override
+    public String getDriver() {
+        return driver;
+    }
+
+    @Override
+    public void setDriver(String driver) {
+        this.driver = driver;
+    }
+
+    @Override
+    public String getUrl() {
+        return url;
+    }
+
+    @Override
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    @Override
+    public String getUserName() {
+        return userName;
+    }
+
+    @Override
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
+    @Override
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public static void main(String[] args) throws ClassNotFoundException, SQLException {
+        AuthorDaoStrategy dao = new AuthorDao();
+        List<Author> authors = dao.getAuthorList();
+        System.out.println(authors);
+
+    }
 
 }

@@ -20,12 +20,13 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import javax.enterprise.context.SessionScoped;
+import javax.enterprise.context.Dependent;
 
 /**
  * @author John Slowik <jslowik@my.wctc.edu>
  */
-@SessionScoped
+@Dependent//inherit scope of parent, so if highest level is SessionScoped, everything that is
+            //dependent is also SessionScoped - in this case the service class
 public class MySqlDBStrategy implements DBStrategy, Serializable {
 
     private Connection conn;

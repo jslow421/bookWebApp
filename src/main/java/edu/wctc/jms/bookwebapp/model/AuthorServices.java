@@ -22,10 +22,19 @@ import javax.inject.Inject;
 @SessionScoped
 public class AuthorServices implements Serializable{
     @Inject
-    private AuthorDaoStrategy dao;
+    private AuthorDaoStrategy dao; //inject the interface
     //private AuthorDaoStrategy dao = new AuthorDao();
+    
+    /**
+     * Default constructor required for injectable objects
+     * 
+     */
+    public AuthorServices(){
+        
+    }
 
     //getters and setters for injection
+    //I don't think we actually need the DAO one here, just the service one
     public AuthorDaoStrategy getDao() {
         return dao;
     }
