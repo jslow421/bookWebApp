@@ -41,15 +41,15 @@
                                     <td>
                                         <c:out value="${author.authorID}" />
                                     </td>
-                                    <td>
+                                    <td id="<c:out value="${author.authorName}"/>" class="authorname">
                                         <c:out value="${author.authorName}"/>
                                     </td>
                                     <td>
                                         <c:out value="${author.dateAdded}"/>
                                     </td>
                                     <td class="crudButtons">
-                                        <a class="btn btn-info btn-sm" href="#" role="button"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>&nbsp Edit</a>
-                                        <a class="btn btn-danger btn-sm" href="?action=delete" role="button"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span>&nbsp Delete</a>
+                                        <a class="btn btn-info btn-xs" href="?action=edit" role="button"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>&nbsp Edit</a>
+                                        <a class="btn btn-danger btn-xs" href="?action=remove&id=<c:out value="${author.authorID}"/>" role="button"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span>&nbsp Delete</a>
                                     </td>
                                 </tr>
                             </c:forEach>
@@ -58,9 +58,10 @@
                     <p>Records found: ${fn:length(authorList)}</p>
                 </div>
             </div>
-                <p><a class="btn btn-primary" href="./addauthor.jsp" role="button"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp Add Author</a></p>
+                
         </div>
         <script src ="https://code.jquery.com/jquery-2.2.0.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+        <script src="authors.js"></script>
     </body>
 </html>

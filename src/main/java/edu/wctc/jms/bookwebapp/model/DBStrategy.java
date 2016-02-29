@@ -21,12 +21,16 @@ public interface DBStrategy {
             throws ClassNotFoundException, SQLException;
 
     public abstract void closeConnection() throws SQLException;
-    
-    public abstract List<Map<String,Object>> findAllRecords(String tableName, int maxRecords) throws SQLException;
-    
+
+    public abstract List<Map<String, Object>> findAllRecords(String tableName, int maxRecords) throws SQLException;
+
     public abstract int deleteRecordByID(String tableName, String columnName, Object recordID) throws SQLException;
+
     public int updateRecordByID(String tableName, List<String> colNames, List<Object> colValues,
             String pkColName, Object value) throws SQLException;
 
     public abstract int insertRecord(String tableName, String authorName) throws SQLException;
+    
+     public Map<String, Object> findById(String tableName, String primaryKeyFieldName,
+            Object primaryKeyValue);
 }

@@ -81,6 +81,18 @@ public class AuthorDao implements AuthorDaoStrategy, Serializable {
         db.closeConnection();
         return authors;
     }
+    
+    @Override
+    public int addAuthor(String authName) throws ClassNotFoundException, SQLException {
+        db.openConnection(driver, url, userName, password);
+
+        int result = db.insertRecord("author", authName);
+       
+
+        db.closeConnection();
+
+        return result;
+    }
 
     //if you want to display records modified you should return an int - even if you don't use it
     /**
@@ -101,6 +113,31 @@ public class AuthorDao implements AuthorDaoStrategy, Serializable {
 
         return result;
     }
+    
+    @Override
+    public Author getAuthorById(Integer authorId) throws ClassNotFoundException, SQLException{
+        db.openConnection(driver, url, userName, password);
+        
+        Map<String,Object> rawRec = db.findById("author", "author_id", authorId);
+        Author author = new Author();
+        author.setAuthorID((Integer)rawRec.get("author_id"));
+        author.setAuthorName(rawRec.get("author_name").toString());
+        author.setDateAdded((Date)rawRec.get("date_added"));
+        
+        return author;
+    }
+    
+    @Override
+    public int updateAuthorByID(List<String> colNames, List<Object> colValues, int id) throws ClassNotFoundException, SQLException {
+        db.openConnection(driver, url, userName, password);
+
+        //int result = db.deleteRecordByID("author", "author_id", id);
+        int result = db.updateRecordByID("author", colNames, colValues, "author_id", id);
+
+        db.closeConnection();
+        return result;
+    }
+    
 
     //getters and setters for injected db property
     @Override

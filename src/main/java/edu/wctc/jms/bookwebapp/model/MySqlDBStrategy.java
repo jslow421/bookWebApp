@@ -57,8 +57,7 @@ public class MySqlDBStrategy implements DBStrategy, Serializable {
     public void closeConnection() throws SQLException {
         conn.close();
     }
-
-    // what would be the downside to using a constructor over this method
+    
     /*
     using methods allows you to open connections to more than one database.
     using the constructor to create two db objects is a waste of memory.
@@ -137,6 +136,7 @@ public class MySqlDBStrategy implements DBStrategy, Serializable {
          */
     }
 
+    @Override
     public int updateRecordByID(String tableName, List<String> colNames, List<Object> colValues,
                                 String pkColName, Object value) throws SQLException {
 
@@ -225,6 +225,43 @@ public class MySqlDBStrategy implements DBStrategy, Serializable {
 
         return stmt.executeUpdate(sql);
 
+    }
+    
+    @Override
+    public final Map<String, Object> findById(String tableName, String primaryKeyFieldName,
+            Object primaryKeyValue){
+
+        String sql = "SELECT * FROM " + tableName + " WHERE " + primaryKeyFieldName + " = ?";
+        PreparedStatement stmt = null;
+        final Map<String, Object> record = new HashMap();
+
+        try {
+            stmt = conn.prepareStatement(sql);
+            stmt.setObject(1, primaryKeyValue);
+            ResultSet rs = stmt.executeQuery();
+            final ResultSetMetaData metaData = rs.getMetaData();
+            final int fields = metaData.getColumnCount();
+
+            // Retrieve the raw data from the ResultSet and copy the values into a Map
+            // with the keys being the column names of the table.
+            if (rs.next()) {
+                for (int i = 1; i <= fields; i++) {
+                    record.put(metaData.getColumnName(i), rs.getObject(i));
+                }
+            }
+            
+        } catch (SQLException e) {
+            
+        } finally {
+            try {
+                stmt.close();
+                conn.close();
+            } catch (SQLException e) {
+                
+            } // end try
+        } // end finally
+
+        return record;
     }
 
     /**

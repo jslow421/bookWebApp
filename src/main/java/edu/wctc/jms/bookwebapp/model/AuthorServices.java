@@ -51,6 +51,14 @@ public class AuthorServices implements Serializable{
         return dao.deleteAuthorByID(id);
     }
     
+    public int addAuthor(String authName) throws ClassNotFoundException, SQLException{
+        return dao.addAuthor(authName);
+    }
+    
+     public Author getAuthorById(String authorId) throws ClassNotFoundException, SQLException {
+        return dao.getAuthorById(Integer.parseInt(authorId));
+    }
+    
     /**
      * Testing method
      * 
