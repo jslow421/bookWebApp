@@ -136,15 +136,15 @@ public class MySqlDBStrategy implements DBStrategy, Serializable {
          */
     }
 
+    
     @Override
-    public int updateRecordByID(String tableName, List<String> colNames, List<Object> colValues,
-                                String pkColName, Object value) throws SQLException {
-
+    public int updateRecords(String tableName, List<String> colNames, List<Object> colValues,
+            String pkColName, Object value)
+            throws SQLException, Exception {
         PreparedStatement pstmt = null;
-        int recsUpdated = 0;
+        int recordsUpdated = 0;
 
-        // do this in an excpetion handler so that we can depend on the
-        // finally clause to close the connection
+        
         try {
             pstmt = buildUpdateStatement(conn, tableName, colNames, pkColName);
 
@@ -152,15 +152,15 @@ public class MySqlDBStrategy implements DBStrategy, Serializable {
             int index = 1;
             Object obj = null;
 
-            // set params for column values
+            
             while (i.hasNext()) {
                 obj = i.next();
                 pstmt.setObject(index++, obj);
             }
-            // and finally set param for wehere value
+            
             pstmt.setObject(index, value);
 
-            recsUpdated = pstmt.executeUpdate();
+            recordsUpdated = pstmt.executeUpdate();
 
         } catch (SQLException sqle) {
             throw sqle;
@@ -172,11 +172,10 @@ public class MySqlDBStrategy implements DBStrategy, Serializable {
                 conn.close();
             } catch (SQLException e) {
                 throw e;
-            } // end try
-        } // end finally
+            } 
+        } 
 
-        return recsUpdated;
-
+        return recordsUpdated;
     }
 
     /*

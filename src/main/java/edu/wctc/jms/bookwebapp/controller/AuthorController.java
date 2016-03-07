@@ -78,23 +78,24 @@ public class AuthorController extends HttpServlet {
                 case LIST_AUTHORS:
                     List<Author> authors = srv.getAuthorList();
                     request.setAttribute("authorList", authors);
-                    
+
                     LANDING = LIST_PAGE;
-                    
+
                     break;
                 case EDIT_AUTHOR:
                     String editAuthID = request.getParameter("id");
                     Author auth = srv.getAuthorById(editAuthID);
                     request.setAttribute("author", auth);
-                    
-                    
+
                     LANDING = EDIT_PAGE;
-                    
+
                     break;
                 case SAVE_AUTHOR:
-                    String updateAuthorName = request.getParameter("name");
-                    String updateAuthorId = request.getParameter("id");
-                    
+                    String authorName = request.getParameter("name");
+                    String authorId = request.getParameter("id");
+                    srv.updateAuthorById(authorId, authorName);
+                    this.updateList(request, srv);
+
                     LANDING = LIST_PAGE;
                     break;
                 case REMOVE_AUTHOR:
@@ -105,13 +106,12 @@ public class AuthorController extends HttpServlet {
                     this.updateList(request, srv);
                     LANDING = LIST_PAGE;
                     break;
-                default:
-            {
-                
-                request.setAttribute("errMsg", NO_PARAM_ERR_MSG);
-            }
-                    LANDING = LIST_PAGE;
-                    break;
+                default: {
+
+                    request.setAttribute("errMsg", NO_PARAM_ERR_MSG);
+                }
+                LANDING = LIST_PAGE;
+                break;
             }
             RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(LANDING);
             dispatcher.forward(request, response);
@@ -124,7 +124,7 @@ public class AuthorController extends HttpServlet {
     private void configDbConnection() {
         srv.getDao().initDao(driverClass, url, userName, password);
     }
-    
+
     private void updateList(HttpServletRequest request, AuthorServices srv) throws Exception {
         List<Author> authors = srv.getAuthorList();
         request.setAttribute("authorList", authors);

@@ -55,10 +55,12 @@
             <div class="page-header">
                 <h1>Edit An Author</h1>
             </div>
-            <form action="./AuthorController?action=save" method ="post">
+           <form action="./AuthorController?action=save" method ="post">
                 <div class="form-group">
-                    <label for="authorname">Author Name</label>
-                    <input type="text" class="form-control" id="name" value="<c:out value="${author.authorName}"/>">
+                    <label for="authorID">Author ID</label>
+                    <input type="text" class="form-control" id="id" name="id" value="<c:out value="${author.authorID}"/>" readonly><br />
+                    <label for="name">Author Name</label>
+                    <input type="text" class="form-control" id="name" name="name" value="<c:out value="${author.authorName}"/>">
                 </div>
                 
                 <button type="submit" class="btn btn-warning">Save Author</button>

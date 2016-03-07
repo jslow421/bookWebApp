@@ -58,10 +58,10 @@ public class AuthorServices implements Serializable{
      public Author getAuthorById(String authorId) throws ClassNotFoundException, SQLException {
         return dao.getAuthorById(Integer.parseInt(authorId));
     }
-     /*
-     public int updateAuthorById(Object id, String authorName)throws ClassNotFoundException, SQLException{
-          return dao.updateAuthorByID(id, authorName);
-     }*/
+
+     public int updateAuthorById(Object id, String authorName) throws ClassNotFoundException, SQLException, Exception {
+        return dao.updateAuthor(id, authorName);
+    }
     
     /**
      * Testing method

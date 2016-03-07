@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -128,14 +129,14 @@ public class AuthorDao implements AuthorDaoStrategy, Serializable {
     }
     
     @Override
-    public int updateAuthorByID(List<String> colNames, List<Object> colValues, int id) throws ClassNotFoundException, SQLException {
+    public int updateAuthor(Object id, String authorName) throws ClassNotFoundException, SQLException, Exception {
         db.openConnection(driver, url, userName, password);
-
-        //int result = db.deleteRecordByID("author", "author_id", id);
-        int result = db.updateRecordByID("author", colNames, colValues, "author_id", id);
-
+        int result = db.updateRecords("author", Arrays.asList("author_name"), 
+                                       Arrays.asList(authorName),
+                                       "author_id", id);
         db.closeConnection();
         return result;
+
     }
     
 
