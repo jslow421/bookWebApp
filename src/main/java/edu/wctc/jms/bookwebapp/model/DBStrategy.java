@@ -32,5 +32,5 @@ public interface DBStrategy {
     public abstract int insertRecord(String tableName, String authorName) throws SQLException;
     
      public Map<String, Object> findById(String tableName, String primaryKeyFieldName,
-            int primaryKeyValue);
+            int primaryKeyValue) throws SQLException;
 }

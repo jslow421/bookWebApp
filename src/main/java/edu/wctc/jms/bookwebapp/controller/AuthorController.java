@@ -85,7 +85,7 @@ public class AuthorController extends HttpServlet {
                 case EDIT_AUTHOR:
                     String editAuthID = request.getParameter("id");
                     Author auth = srv.getAuthorById(editAuthID);
-                    request.setAttribute("author", editAuthID);
+                    request.setAttribute("author", auth);
                     
                     
                     LANDING = EDIT_PAGE;
@@ -94,6 +94,7 @@ public class AuthorController extends HttpServlet {
                 case SAVE_AUTHOR:
                     String updateAuthorName = request.getParameter("name");
                     String updateAuthorId = request.getParameter("id");
+                    
                     LANDING = LIST_PAGE;
                     break;
                 case REMOVE_AUTHOR:

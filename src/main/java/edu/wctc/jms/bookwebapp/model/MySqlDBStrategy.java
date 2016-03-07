@@ -229,13 +229,13 @@ public class MySqlDBStrategy implements DBStrategy, Serializable {
     
     @Override
     public final Map<String, Object> findById(String tableName, String primaryKeyFieldName,
-            int primaryKeyValue){
+            int primaryKeyValue) throws SQLException{
 
         String sql = "SELECT * FROM " + tableName + " WHERE " + primaryKeyFieldName + " = ?";
         PreparedStatement stmt = null;
         final Map<String, Object> record = new HashMap();
 
-        try {
+        
             stmt = conn.prepareStatement(sql);
             stmt.setObject(1, primaryKeyValue);
             ResultSet rs = stmt.executeQuery();
@@ -250,16 +250,7 @@ public class MySqlDBStrategy implements DBStrategy, Serializable {
                 }
             }
             
-        } catch (SQLException e) {
-            
-        } finally {
-            try {
-                stmt.close();
-                //conn.close();
-            } catch (SQLException e) {
-                
-            } // end try
-        } // end finally
+        
 
         return record;
     }

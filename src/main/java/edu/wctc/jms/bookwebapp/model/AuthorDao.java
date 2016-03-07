@@ -122,7 +122,7 @@ public class AuthorDao implements AuthorDaoStrategy, Serializable {
         Author author = new Author();
         author.setAuthorID((Integer)rawRec.get("author_id"));
         author.setAuthorName(rawRec.get("author_name").toString());
-        author.setDateAdded((Date)rawRec.get("date_added"));
+        //author.setDateAdded((Date)rawRec.get("date_added"));
         
         return author;
     }
