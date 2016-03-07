@@ -194,6 +194,8 @@ public class AuthorDao implements AuthorDaoStrategy, Serializable {
         AuthorDaoStrategy dao = new AuthorDao();
         List<Author> authors = dao.getAuthorList();
         System.out.println(authors);
+        
+        
 
     }
 

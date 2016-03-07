@@ -27,7 +27,6 @@ import javax.inject.Inject;
 @WebServlet(name = "AuthorController", urlPatterns = {"/AuthorController"})
 public class AuthorController extends HttpServlet {
 
-    private static final String RESPONSE_URL = "/viewauthors.jsp";
     private static final String ACTION_PARAM = "action";
     private static final String ADD_AUTHOR = "add";
     private static final String LIST_AUTHORS = "list";
@@ -37,6 +36,7 @@ public class AuthorController extends HttpServlet {
     private static final String LIST_PAGE = "/viewauthors.jsp";
     private static final String EDIT_PAGE = "/editauthor.jsp";
     private static String LANDING = null;
+    private static final String NO_PARAM_ERR_MSG = "No request parameter identified";
 
     //db config init params from web.xml
     //remember, servlets are singletons, so these values are global and shared by everyone
@@ -70,7 +70,6 @@ public class AuthorController extends HttpServlet {
 
             switch (action) {
                 case ADD_AUTHOR:
-                    //String[] authorName = request.getParameterValues("name");
                     String authName = request.getParameter("name");
                     srv.addAuthor(authName);
                     this.updateList(request, srv);
@@ -79,18 +78,17 @@ public class AuthorController extends HttpServlet {
                 case LIST_AUTHORS:
                     List<Author> authors = srv.getAuthorList();
                     request.setAttribute("authorList", authors);
-                    RequestDispatcher view = request.getRequestDispatcher(RESPONSE_URL);
-                    view.forward(request, response);
+                    
+                    LANDING = LIST_PAGE;
+                    
                     break;
                 case EDIT_AUTHOR:
-                    String[] editAuthID = request.getParameterValues("id");
-                    String authorId = editAuthID[0];
-                    Author auth = srv.getAuthorById(authorId);
-                     request.setAttribute("author", auth);
-                    //request.getRequestDispatcher("/editauthor.jsp").forward(request, response);
+                    String editAuthID = request.getParameter("id");
+                    Author auth = srv.getAuthorById(editAuthID);
+                    request.setAttribute("author", editAuthID);
+                    
+                    
                     LANDING = EDIT_PAGE;
-                    //RequestDispatcher dispatcher= getServletContext().getRequestDispatcher("/editauthor.jsp");
-                    //dispatcher.forward(request, response);
                     
                     break;
                 case SAVE_AUTHOR:
@@ -107,6 +105,11 @@ public class AuthorController extends HttpServlet {
                     LANDING = LIST_PAGE;
                     break;
                 default:
+            {
+                
+                request.setAttribute("errMsg", NO_PARAM_ERR_MSG);
+            }
+                    LANDING = LIST_PAGE;
                     break;
             }
             RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(LANDING);

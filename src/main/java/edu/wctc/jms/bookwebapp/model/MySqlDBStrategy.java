@@ -229,7 +229,7 @@ public class MySqlDBStrategy implements DBStrategy, Serializable {
     
     @Override
     public final Map<String, Object> findById(String tableName, String primaryKeyFieldName,
-            Object primaryKeyValue){
+            int primaryKeyValue){
 
         String sql = "SELECT * FROM " + tableName + " WHERE " + primaryKeyFieldName + " = ?";
         PreparedStatement stmt = null;
@@ -255,7 +255,7 @@ public class MySqlDBStrategy implements DBStrategy, Serializable {
         } finally {
             try {
                 stmt.close();
-                conn.close();
+                //conn.close();
             } catch (SQLException e) {
                 
             } // end try
@@ -277,9 +277,9 @@ public class MySqlDBStrategy implements DBStrategy, Serializable {
         db.openConnection("com.mysql.jdbc.Driver", "jdbc:mysql://localhost:3306/book",
                 "root", "admin");
 
-        int insert = db.insertRecord("author", "John Poe");
-
-        List<Map<String, Object>> rawData = db.findAllRecords("author", 0);
+        //int insert = db.insertRecord("author", "John Poe");
+        db.findById("author", "author_id", 1);
+        //List<Map<String, Object>> rawData = db.findAllRecords("author", 0);
 
         //int updates = db.deleteRecordByID("author", "author_id", 2);
 
@@ -289,10 +289,14 @@ public class MySqlDBStrategy implements DBStrategy, Serializable {
 
         db.closeConnection();
 
-        System.out.println(rawData);
-        System.out.println("Added " + insert + " record(s)");
+        //System.out.println(rawData);
+        //System.out.println("Added " + insert + " record(s)");
         //System.out.println("Records removed: " + updates);
         //System.out.println(result);
+        
+                
+        
 
     }
+    
 }
