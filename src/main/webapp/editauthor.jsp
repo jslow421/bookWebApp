@@ -57,8 +57,7 @@
             </div>
            <form action="./AuthorController?action=save" method ="post">
                 <div class="form-group">
-                    <label for="authorID">Author ID</label>
-                    <input type="text" class="form-control" id="id" name="id" value="<c:out value="${author.authorID}"/>" readonly><br />
+                    <input type="hidden" class="form-control" id="id" name="id" value="<c:out value="${author.authorID}"/>" readonly><br />
                     <label for="name">Author Name</label>
                     <input type="text" class="form-control" id="name" name="name" value="<c:out value="${author.authorName}"/>">
                 </div>
