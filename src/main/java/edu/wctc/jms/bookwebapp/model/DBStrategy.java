@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import javax.sql.DataSource;
 
 /**
  *
@@ -30,7 +31,9 @@ public interface DBStrategy {
             String pkColName, Object value) throws SQLException, Exception;
 
     public abstract int insertRecord(String tableName, String authorName) throws SQLException;
-    
-     public Map<String, Object> findById(String tableName, String primaryKeyFieldName,
+
+    public Map<String, Object> findById(String tableName, String primaryKeyFieldName,
             int primaryKeyValue) throws SQLException;
+
+    public void openConnection(DataSource ds) throws Exception;
 }

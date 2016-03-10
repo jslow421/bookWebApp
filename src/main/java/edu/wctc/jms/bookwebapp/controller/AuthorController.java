@@ -19,6 +19,9 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.inject.Inject;
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.sql.DataSource;
 
 /**
  *
@@ -44,6 +47,7 @@ public class AuthorController extends HttpServlet {
     private String url;
     private String userName;
     private String password;
+    private String dbJndiName;
 
     @Inject
     private AuthorServices srv; //we dont' have an interface for this
@@ -64,9 +68,9 @@ public class AuthorController extends HttpServlet {
         String action = request.getParameter(ACTION_PARAM);
 
         //use init parameters to config database connection
-        configDbConnection();
-
         try {
+            // use init parameters to config database connection
+            configDbConnection();
 
             switch (action) {
                 case ADD_AUTHOR:
@@ -121,8 +125,18 @@ public class AuthorController extends HttpServlet {
         }
     }
 
-    private void configDbConnection() {
-        srv.getDao().initDao(driverClass, url, userName, password);
+    private void configDbConnection() throws Exception {
+        if (dbJndiName == null) {
+            srv.getDao().initDao(driverClass, url, userName, password);
+        } else {
+            /*
+             Lookup the JNDI name of the Glassfish connection pool
+             and then use it to create a DataSource object.
+             */
+            Context ctx = new InitialContext();
+            DataSource ds = (DataSource) ctx.lookup(dbJndiName);
+            srv.getDao().initDao(ds);
+        }
     }
 
     private void updateList(HttpServletRequest request, AuthorServices srv) throws Exception {
@@ -186,10 +200,11 @@ public class AuthorController extends HttpServlet {
     @Override
     public void init() throws ServletException {
         //get init params from web.xml
-        driverClass = getServletContext().getInitParameter("db.driver.class");
-        url = getServletContext().getInitParameter("db.url");
-        userName = getServletContext().getInitParameter("db.username");
-        password = getServletContext().getInitParameter("db.password");
+        //driverClass = getServletContext().getInitParameter("db.driver.class");
+        //url = getServletContext().getInitParameter("db.url");
+        //userName = getServletContext().getInitParameter("db.username");
+        //password = getServletContext().getInitParameter("db.password");
+        dbJndiName = getServletContext().getInitParameter("db.jndi.name");
     }
 
 }

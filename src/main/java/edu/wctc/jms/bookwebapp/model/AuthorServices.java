@@ -43,19 +43,19 @@ public class AuthorServices implements Serializable{
         this.dao = dao;
     }
     
-    public List<Author> getAuthorList() throws ClassNotFoundException, SQLException {
+    public List<Author> getAuthorList() throws ClassNotFoundException, SQLException, Exception {
         
          return dao.getAuthorList();
     }
-    public int deleteAuthorByID(Object id) throws ClassNotFoundException, SQLException{
+    public int deleteAuthorByID(Object id) throws ClassNotFoundException, SQLException, Exception{
         return dao.deleteAuthorByID(id);
     }
     
-    public int addAuthor(String authName) throws ClassNotFoundException, SQLException{
+    public int addAuthor(String authName) throws ClassNotFoundException, SQLException, Exception{
         return dao.addAuthor(authName);
     }
     
-     public Author getAuthorById(String authorId) throws ClassNotFoundException, SQLException {
+     public Author getAuthorById(String authorId) throws ClassNotFoundException, SQLException, Exception {
         return dao.getAuthorById(Integer.parseInt(authorId));
     }
 
@@ -71,12 +71,12 @@ public class AuthorServices implements Serializable{
      * @throws SQLException 
      */
     public static void main(String[] args) throws ClassNotFoundException, SQLException {
-        AuthorServices srv = new AuthorServices();
-        List<Author> authors = srv.getAuthorList();
+        //AuthorServices srv = new AuthorServices();
+        //List<Author> authors = srv.getAuthorList();
         
         
         
-        System.out.println(authors);
+        //System.out.println(authors);
     }
     
 }
