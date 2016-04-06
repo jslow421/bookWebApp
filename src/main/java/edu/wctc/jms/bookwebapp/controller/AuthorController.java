@@ -5,8 +5,8 @@
  */
 package edu.wctc.jms.bookwebapp.controller;
 
-import edu.wctc.jms.bookwebapp.model.Author;
-import edu.wctc.jms.bookwebapp.model.AuthorServices;
+
+import edu.wctc.jms.bookwebapp.service.AuthorService;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -50,7 +50,7 @@ public class AuthorController extends HttpServlet {
     private String dbJndiName;
 
     @Inject
-    private AuthorServices srv; //we dont' have an interface for this
+    private AuthorService srv; //we dont' have an interface for this
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -75,21 +75,21 @@ public class AuthorController extends HttpServlet {
             switch (action) {
                 case ADD_AUTHOR:
                     String authName = request.getParameter("name");
-                    srv.addAuthor(authName);
-                    this.updateList(request, srv);
+                    //srv.addAuthor(authName);
+                    //this.updateList(request, srv);
                     LANDING = LIST_PAGE;
                     break;
                 case LIST_AUTHORS:
-                    List<Author> authors = srv.getAuthorList();
-                    request.setAttribute("authorList", authors);
+                    //List<Author> authors = srv.getAuthorList();
+                    //request.setAttribute("authorList", authors);
 
                     LANDING = LIST_PAGE;
 
                     break;
                 case EDIT_AUTHOR:
                     String editAuthID = request.getParameter("id");
-                    Author auth = srv.getAuthorById(editAuthID);
-                    request.setAttribute("author", auth);
+                    //Author auth = srv.getAuthorById(editAuthID);
+                    //request.setAttribute("author", auth);
 
                     LANDING = EDIT_PAGE;
 
@@ -97,18 +97,17 @@ public class AuthorController extends HttpServlet {
                 case SAVE_AUTHOR:
                     String authorName = request.getParameter("name");
                     String authorId = request.getParameter("id");
-                    srv.updateAuthorById(authorId, authorName);
-                    
-                    this.updateList(request, srv);
+                    //srv.updateAuthorById(authorId, authorName);
+                   // this.updateList(request, srv);
 
                     LANDING = LIST_PAGE;
                     break;
                 case REMOVE_AUTHOR:
                     String[] authorIds = request.getParameterValues("id");
                     for (String id : authorIds) {
-                        srv.deleteAuthorByID(id);
+                        //srv.deleteAuthorByID(id);
                     }
-                    this.updateList(request, srv);
+                   // this.updateList(request, srv);
                     LANDING = LIST_PAGE;
                     break;
                 default: {
@@ -128,7 +127,7 @@ public class AuthorController extends HttpServlet {
 
     private void configDbConnection() throws Exception {
         if (dbJndiName == null) {
-            srv.getDao().initDao(driverClass, url, userName, password);
+         //   srv.getDao().initDao(driverClass, url, userName, password);
         } else {
             /*
              Lookup the JNDI name of the Glassfish connection pool
@@ -136,14 +135,14 @@ public class AuthorController extends HttpServlet {
              */
             Context ctx = new InitialContext();
             DataSource ds = (DataSource) ctx.lookup(dbJndiName);
-            srv.getDao().initDao(ds);
+            //srv.getDao().initDao(ds);
         }
     }
 
-    private void updateList(HttpServletRequest request, AuthorServices srv) throws Exception {
-        List<Author> authors = srv.getAuthorList();
-        request.setAttribute("authorList", authors);
-    }
+//    private void updateList(HttpServletRequest request, AuthorServices srv) throws Exception {
+//        List<Author> authors = srv.getAuthorList();
+//        request.setAttribute("authorList", authors);
+//    }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
