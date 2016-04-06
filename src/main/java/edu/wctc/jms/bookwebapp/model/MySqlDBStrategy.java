@@ -44,6 +44,7 @@ public class MySqlDBStrategy implements DBStrategy, Serializable {
      *
      * @param ds - a reference to a connection pool via a JNDI name, producing
      * this object. Typically done in a servlet using InitalContext object.
+     * @throws java.lang.Exception
      * @throws DataAccessException - if ds cannot be established
      */
     @Override
@@ -285,8 +286,8 @@ public class MySqlDBStrategy implements DBStrategy, Serializable {
                 "root", "admin");
 
         //int insert = db.insertRecord("author", "John Poe");
-        db.findById("author", "author_id", 1);
-        //List<Map<String, Object>> rawData = db.findAllRecords("author", 0);
+        //db.findById("author", "author_id", 1);
+        List<Map<String, Object>> rawData = db.findAllRecords("author", 0);
 
         //int updates = db.deleteRecordByID("author", "author_id", 2);
 
@@ -296,7 +297,7 @@ public class MySqlDBStrategy implements DBStrategy, Serializable {
 
         db.closeConnection();
 
-        //System.out.println(rawData);
+        System.out.println(rawData);
         //System.out.println("Added " + insert + " record(s)");
         //System.out.println("Records removed: " + updates);
         //System.out.println(result);

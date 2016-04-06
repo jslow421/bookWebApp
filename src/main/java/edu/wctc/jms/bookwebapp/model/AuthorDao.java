@@ -224,10 +224,11 @@ public class AuthorDao implements AuthorDaoStrategy, Serializable {
         this.password = password;
     }
 
-    public static void main(String[] args) throws ClassNotFoundException, SQLException {
+    public static void main(String[] args) throws ClassNotFoundException, SQLException, Exception {
         //AuthorDaoStrategy dao = new AuthorDao();
         //List<Author> authors = dao.getAuthorList();
         //System.out.println(authors);
+        
 
     }
 

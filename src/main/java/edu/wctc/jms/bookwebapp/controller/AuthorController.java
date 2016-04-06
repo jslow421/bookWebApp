@@ -98,6 +98,7 @@ public class AuthorController extends HttpServlet {
                     String authorName = request.getParameter("name");
                     String authorId = request.getParameter("id");
                     srv.updateAuthorById(authorId, authorName);
+                    
                     this.updateList(request, srv);
 
                     LANDING = LIST_PAGE;
