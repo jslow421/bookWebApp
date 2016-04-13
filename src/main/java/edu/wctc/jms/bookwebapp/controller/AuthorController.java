@@ -21,7 +21,10 @@ import java.util.logging.Logger;
 import javax.inject.Inject;
 import javax.naming.Context;
 import javax.naming.InitialContext;
+import javax.servlet.ServletContext;
 import javax.sql.DataSource;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
 /**
  *
@@ -49,8 +52,8 @@ public class AuthorController extends HttpServlet {
     private String password;
     private String dbJndiName;
 
-    @Inject
-    private AuthorService srv; //we dont' have an interface for this
+  
+    private AuthorService srv;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -199,12 +202,19 @@ public class AuthorController extends HttpServlet {
      */
     @Override
     public void init() throws ServletException {
+        // Ask Spring for object to inject
+        ServletContext sctx = getServletContext();
+        WebApplicationContext ctx
+                = WebApplicationContextUtils.getWebApplicationContext(sctx);
+        srv = (AuthorService) ctx.getBean("authorService");
+        
         //get init params from web.xml
         //driverClass = getServletContext().getInitParameter("db.driver.class");
         //url = getServletContext().getInitParameter("db.url");
         //userName = getServletContext().getInitParameter("db.username");
         //password = getServletContext().getInitParameter("db.password");
-        dbJndiName = getServletContext().getInitParameter("db.jndi.name");
+        //dbJndiName = getServletContext().getInitParameter("db.jndi.name");
+
     }
 
 }
